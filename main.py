@@ -16,7 +16,8 @@ def resetWIFI():
         f = open('version.json','w') 
         f.write(json.dumps(coder_version)) 
         f.close()
-        os.remove('wifi.dat') 
+        if check_file_exists('wifi.dat') :
+            os.remove('wifi.dat') 
 
         
 def read_credentials(selffle):
@@ -34,7 +35,13 @@ def read_credentials(selffle):
             profiles['ssid'] = ssid
             profiles['password'] = password
         return profiles
-
+def check_file_exists(filename):
+    try:
+        os.stat(filename)
+        return True
+    except OSError:
+        return False
+    
 def get_device_serial_number():
         try:
             import machine
@@ -60,14 +67,14 @@ def button_pressed(pin):
             timer_direction = 0
 
     if timer_direction == 1 and pin.value() == 0 :
-        wash.main()
+        wash.main() 
         for _ in range(3):
             led.value(0)
             time.sleep(0.5)
             led.value(1)
             time.sleep(0.5)
         resetWIFI()
-        led.value(0)
+        #led.value(0) 
         machine.reset()
         print("######Rebooting...")
     
@@ -157,10 +164,12 @@ while True:
             print('Connected to WiFi!')
             break
         else:
-            if checkCnnect >= 20:
+            if checkCnnect >= 10:
                 print('Resetting WiFi...')
                 resetWIFI()
-                time.sleep(5)
+                time.sleep(1)
+                machine.reset()
+            if check_file_exists() == False :
                 machine.reset()
             print('Error connecting to WiFi!',checkCnnect) 
             checkCnnect+=1

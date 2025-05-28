@@ -138,7 +138,7 @@ def get_machine_status():
     1. เช็คสถานะเครื่อง/ประตู/การทำงาน
     อ่านข้อมูลจาก Address 20 ถึง 22
     """
-    status_data = modbus_client.read_holding_registers(20, 50) # Read from address 20, 21, 22
+    status_data = modbus_client.read_holding_registers(20, 20) # Read from address 20, 21, 22
     if status_data:
         run_status = status_data[0] # Address 20: Run status
         door_status = status_data[1] # Address 21: Door status
@@ -228,10 +228,10 @@ def start_operation():
     return ujson.dumps({"status": "error", "message": "Failed to send start command."})
 
 def stop_operation():
-    """
-    4. สั่งหยุดการทำงาน
+    """ 
+    4. สั่งหยุดการทำงาน 
     เขียนค่า 1 ไปยัง Address 3 (Force stop)
-    """
+    """ 
     if modbus_client.write_multiple_registers(3, [1]): # Address 3, Value 1
         return ujson.dumps({"status": "success", "message": "Stop command sent."})
     return ujson.dumps({"status": "error", "message": "Failed to send stop command."})

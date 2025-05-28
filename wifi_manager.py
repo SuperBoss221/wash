@@ -138,7 +138,7 @@ class WifiManager:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind(('', 80))
-        server_socket.listen(10)
+        server_socket.listen(10) 
         print('Connect to', self.ap_ssid, 'with the password', self.ap_password, 'and access the captive portal at', self.wlan_ap.ifconfig()[0])
         while True:
             if self.wlan_sta.isconnected():
