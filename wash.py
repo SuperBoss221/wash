@@ -257,6 +257,12 @@ def reset_error():
     if modbus_client.write_multiple_registers(0, [1]): # Address 0, Value 1
         return ujson.dumps({"status": "success", "message": "Error reset command sent."})
     return ujson.dumps({"status": "error", "message": "Failed to send error reset command."})
+ 
+def sendcommand(address,value):
+    if modbus_client.write_multiple_registers(address,value): # Address 0, Value 1
+        return ujson.dumps({"status": "success", "message": "Error reset command sent."})
+    return ujson.dumps({"status": "error", "message": "Failed to send error reset command."})
+
 
 def write_credentials(name,response):
         with open(str(name)+'.json', 'w') as file:
@@ -302,4 +308,3 @@ def main():
     print("\n--- Getting Machine Status Again ---")
     status_json_after_commands = get_machine_status()
     print(status_json_after_commands)
-

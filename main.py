@@ -102,7 +102,8 @@ def interpret_status_data(data):
                     f.close()
                     time.sleep(5)
                     print("success")
-                requests.put(url , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
                 print("reboot")
                 return machine.reset()
                 
@@ -117,7 +118,8 @@ def interpret_status_data(data):
                     f.close()
                     time.sleep(5)
                     print("success")
-                requests.put(url , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
                 print("reboot")
                 return machine.reset()
             
@@ -126,35 +128,57 @@ def interpret_status_data(data):
                 txt = wash.reset_error()
                 print(txt)
                 time.sleep(1)
-                
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                return print("reset_error")
+            
             if data_json['command']['key'] == 'get_status' :
                 txt = wash.get_machine_status()
                 print(txt)
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                return print("get_statement")
                 
             if data_json['command']['key'] == 'menu' and data_json['command']['value'] :
                 txt = wash.select_program(int(data_json['command']['value']))
-                print(txt)
-                time.sleep(1)
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                return print(txt)
                 
             if data_json['command']['key'] == 'coins' and data_json['command']['value'] :
                 txt = wash.add_coins(int(data_json['command']['value']))
-                print(txt)
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
                 time.sleep(1)
+                return print(txt)
                 
             if data_json['command']['key'] == 'start' :
-                wash.start_operation()
+                txt = wash.start_operation()
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
                 time.sleep(1)
+                return print(txt)
                 
             if data_json['command']['key'] == 'stop' :
                 txt = wash.stop_operation()
-                print(txt)
-                time.sleep(21)
-        
-            if data_json['command']['key'] == 'reboot' :
-                requests.put(url , data=json.dumps(data), headers={'Content-Type': 'application/json'})
-                machine.reset()
-                time.sleep(5)
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                time.sleep(1)
+                return print(txt)
+
+            if data_json['command']['key'] == 'command' and data_json['command']['address'] :
+                txt = wash.sendcommand(int(data_json['command']['address']),int(data_json['command']['value']))
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                time.sleep(1)
+                return print(txt)
             
+            if data_json['command']['key'] == 'reboot' :
+                data = {}
+                requests.put(url+str('/command') , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                time.sleep(5)
+                return machine.reset()
+                
         requests.put(url , data=json.dumps(data), headers={'Content-Type': 'application/json'})
         print(f"Success sending status to API")
     except :
@@ -196,6 +220,6 @@ while True:
     data = {"ip":str(WiFIManager.get_address()[0]),"client_id":get_device_serial_number(),"status":wash_status}
     interpret_status_data(data)
     led.value(0)
-    time.sleep(2)
+    time.sleep(1)
   except :
     machine.reset()
