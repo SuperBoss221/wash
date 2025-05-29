@@ -10,7 +10,7 @@ def check_file_exists(filename):
         return True
     except OSError:
         return False
-
+print("version:1")
 file_to_check = 'wash.txt'
 if check_file_exists(file_to_check):
     os.remove('wash.py')

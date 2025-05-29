@@ -92,29 +92,36 @@ def interpret_status_data(data):
         if 'command' in data_json :
             
             if data_json['command']['key'] == 'update_wash' and data_json['command']['value']  :
-                url = str(data_json['command']['value'])
-                response_update = requests.get(url ,headers={'Content-Type': 'text'})
-                print(url)
-                if response_update.status == 200 :
+                urls = str(data_json['command']['value'])
+                response_update = requests.get(urls)
+                print(response_update.status_code)
+                if response_update.status_code == 200 :
                     print("update_wash")
-                    coders = response_update.text()
-                    f = open('wash.txt','w') 
-                    f.write(coders) 
+                    f = open('wash.txt','w')
+                    f.write(str(response_update.text))
                     f.close()
                     time.sleep(5)
-
+                    print("success")
+                requests.put(url , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                print("reboot")
+                return machine.reset()
+                
             if data_json['command']['key'] == 'update_main' and data_json['command']['value']  :
-                url = str(data_json['command']['value'])
-                print(url)
-                response_update = requests.get(url ,headers={'Content-Type': 'text'})
-                if response_update.status == 200 :
+                urls = str(data_json['command']['value'])
+                response_update = requests.get(urls)
+                print(response_update.status_code)
+                if response_update.status_code == 200 :
                     print("update_main")
-                    coders = response_update.text()
-                    f = open('main.txt','w') 
-                    f.write(coders) 
+                    f = open('main.txt','w')
+                    f.write(str(response_update.text))
                     f.close()
                     time.sleep(5)
-
+                    print("success")
+                requests.put(url , data=json.dumps(data), headers={'Content-Type': 'application/json'})
+                print("reboot")
+                return machine.reset()
+            
+            
             if data_json['command']['key'] == 'reset_error' :
                 txt = wash.reset_error()
                 print(txt)
