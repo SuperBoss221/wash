@@ -204,8 +204,8 @@ def get_machine_status():
         }
 
         response = {
-            "app": "wash",
-            "version": "wash",
+            "app": "dryer",
+            "version": "sx27600xa_2",
             "run_status": run_status_map.get(run_status, f"Unknown ({run_status})"),
             "door_status": door_status_map.get(door_status, f"Unknown ({door_status})"),
             "error_status": error_status_map.get(error_status_bit_0, f"Unknown ({error_status_bit_0})"), # Only using bit 0 for error status
